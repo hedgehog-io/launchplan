@@ -1,0 +1,1956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hedgehog — Launch Plan 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+
+/* =============================================
+   HEDGEHOG BRAND — COLOR SYSTEM
+   Light bg · Dark navy text · Mint/Teal accents
+   Lime as faded watermark only
+   ============================================= */
+:root {
+  /* Brand colors (exact) */
+  --cream:    #EDEBE4;
+  --mint:     #64D9A2;
+  --lime:     #CDFAB6;
+  --teal:     #164E59;
+  --navy:     #152B40;
+  --deep:     #07121e;
+
+  /* Light slide semantic */
+  --bg:       #EDEBE4;
+  --card-bg:  rgba(255,255,255,0.75);
+  --text:     #07121e;
+  --text2:    #152B40;
+  --dim:      rgba(7,18,30,0.5);
+  --dim2:     rgba(7,18,30,0.28);
+  --accent:   #164E59;
+  --hi:       #64D9A2;
+  --brd:      rgba(22,78,89,0.13);
+
+  /* Phase accent colors */
+  --p1: #164E59;
+  --p2: #152B40;
+  --p3: #07121e;
+
+  /* Fonts */
+  --fh: 'Poppins', sans-serif;
+  --fb: 'Poppins', sans-serif;
+
+  /* Sizing — all clamp() */
+  --pad:  clamp(2rem,5vw,5rem);
+  --gap:  clamp(0.55rem,1.4vh,1rem);
+  --ts:   clamp(2rem,5vw,4rem);
+  --hs:   clamp(1.1rem,2.5vw,1.9rem);
+  --bs:   clamp(0.7rem,1.2vw,0.92rem);
+  --ss:   clamp(0.6rem,0.88vw,0.75rem);
+  --ease: cubic-bezier(0.16,1,0.3,1);
+}
+
+/* =============================================
+   RESET + BASE
+   ============================================= */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-snap-type:y mandatory;scroll-behavior:smooth;height:100%;overflow-x:hidden;}
+body{font-family:var(--fb);height:100%;overflow-x:hidden;background:var(--deep);}
+
+/* =============================================
+   VIEWPORT BASE — MANDATORY
+   ============================================= */
+.slide{
+  width:100vw;height:100vh;height:100dvh;
+  overflow:hidden;scroll-snap-align:start;
+  display:flex;flex-direction:column;
+  position:relative;
+}
+
+/* Light slide default */
+.slide.light{ background:var(--bg); color:var(--text); }
+
+/* Dark slides (phase headers & closing) */
+.slide.dark-teal  { background:var(--teal); color:var(--cream); }
+.slide.dark-navy  { background:var(--navy); color:var(--cream); }
+.slide.dark-deep  { background:var(--deep); color:var(--cream); }
+
+/* Short viewport scaling */
+@media(max-height:700px){
+  :root{--pad:clamp(1rem,3vw,2.5rem);--gap:clamp(0.35rem,1vh,0.65rem);--ts:clamp(1.5rem,4vw,2.5rem);--hs:clamp(0.9rem,2vw,1.4rem);--bs:clamp(0.62rem,1.1vw,0.8rem);--ss:clamp(0.55rem,0.8vw,0.68rem);}
+}
+@media(max-height:600px){
+  :root{--pad:clamp(0.75rem,2.5vw,1.8rem);--gap:clamp(0.28rem,0.8vh,0.5rem);--ts:clamp(1.2rem,3.5vw,2rem);--hs:clamp(0.8rem,1.8vw,1.15rem);--bs:clamp(0.58rem,1vw,0.72rem);}
+  .nav-dots{display:none;}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.2s!important;}
+  html{scroll-behavior:auto;}
+}
+
+/* =============================================
+   PROGRESS BAR
+   ============================================= */
+.progress-bar{
+  position:fixed;top:0;left:0;height:3px;
+  background:var(--mint);
+  box-shadow:0 0 10px rgba(100,217,162,.6);
+  transition:width .4s var(--ease);
+  z-index:9999;
+}
+
+/* =============================================
+   NAV DOTS
+   ============================================= */
+.nav-dots{
+  position:fixed;right:14px;top:50%;
+  transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:6px;
+  z-index:1000;
+}
+.nav-dot{
+  width:5px;height:5px;border-radius:50%;
+  background:rgba(22,78,89,.3);
+  border:none;cursor:pointer;
+  transition:all .3s ease;padding:0;
+}
+.nav-dot.active{
+  background:var(--teal);
+  box-shadow:0 0 6px rgba(22,78,89,.6);
+  transform:scale(1.7);
+}
+.slide.dark-teal  .nav-dot,
+.slide.dark-navy  .nav-dot,
+.slide.dark-deep  .nav-dot{ background:rgba(205,250,182,.35); }
+.slide.dark-teal  .nav-dot.active,
+.slide.dark-navy  .nav-dot.active,
+.slide.dark-deep  .nav-dot.active{ background:var(--lime); box-shadow:0 0 6px rgba(205,250,182,.6); }
+
+/* =============================================
+   SVG WATERMARK — inline hedgehog icon
+   Used as bottom-right corner element
+   ============================================= */
+.watermark{
+  position:absolute;
+  bottom:calc(-1 * clamp(2rem,5vw,4rem));
+  right:calc(-1 * clamp(1.5rem,4vw,3rem));
+  width:clamp(160px,28vw,320px);
+  height:auto;
+  pointer-events:none;
+  user-select:none;
+  z-index:0;
+  mix-blend-mode:multiply; /* removes white PNG background on all slides */
+}
+.light  .watermark{ opacity:.22; }
+.dark-teal .watermark{ opacity:.18; }
+.dark-navy .watermark{ opacity:.16; }
+.dark-deep .watermark{ opacity:.14; }
+
+/* =============================================
+   ANIMATIONS
+   ============================================= */
+.rev{opacity:0;transform:translateY(18px);transition:opacity .6s var(--ease),transform .6s var(--ease);}
+.slide.vis .rev{opacity:1;transform:none;}
+.slide.vis .rev:nth-child(1){transition-delay:.04s;}
+.slide.vis .rev:nth-child(2){transition-delay:.10s;}
+.slide.vis .rev:nth-child(3){transition-delay:.16s;}
+.slide.vis .rev:nth-child(4){transition-delay:.22s;}
+.slide.vis .rev:nth-child(5){transition-delay:.28s;}
+.slide.vis .rev:nth-child(6){transition-delay:.34s;}
+.slide.vis .rev:nth-child(7){transition-delay:.40s;}
+.slide.vis .rev:nth-child(8){transition-delay:.46s;}
+.slide.vis .rev:nth-child(9){transition-delay:.52s;}
+
+/* =============================================
+   LAYOUT
+   ============================================= */
+.topbar{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:clamp(.9rem,2vh,1.5rem) var(--pad) 0;
+  flex-shrink:0; position:relative; z-index:2;
+}
+.body{
+  flex:1;display:flex;flex-direction:column;
+  justify-content:center;overflow:hidden;
+  padding:clamp(.4rem,1.2vh,1rem) var(--pad) var(--pad);
+  position:relative;z-index:2;
+}
+
+/* =============================================
+   MINI LOGO (top-left of every slide)
+   ============================================= */
+.logo-mark{display:flex;align-items:center;}
+.logo-img{height:clamp(20px,2.8vw,32px);width:auto;flex-shrink:0;}
+/* Dark slides: invert logo to white */
+.dark-teal .logo-img,
+.dark-navy .logo-img,
+.dark-deep .logo-img{ filter:brightness(0) invert(1); }
+
+/* =============================================
+   SLIDE NUMBER
+   ============================================= */
+.snum{
+  font-family:var(--fh);font-size:var(--ss);
+  font-weight:600;letter-spacing:.08em;
+}
+.light     .snum{ color:var(--dim); }
+.dark-teal .snum,
+.dark-navy .snum,
+.dark-deep .snum{ color:rgba(205,250,182,.55); }
+
+/* =============================================
+   BADGE
+   ============================================= */
+.badge{
+  font-family:var(--fh);font-size:clamp(.55rem,.78vw,.68rem);
+  font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  padding:3px 11px;border-radius:16px;
+}
+.light     .badge{ color:var(--teal); border:1px solid rgba(22,78,89,.35); background:rgba(22,78,89,.07); }
+.dark-teal .badge{ color:var(--lime); border:1px solid rgba(205,250,182,.35); background:rgba(205,250,182,.08); }
+.dark-navy .badge{ color:var(--mint); border:1px solid rgba(100,217,162,.35); background:rgba(100,217,162,.08); }
+.dark-deep .badge{ color:var(--lime); border:1px solid rgba(205,250,182,.3);  background:rgba(205,250,182,.07); }
+
+/* =============================================
+   TYPOGRAPHY
+   ============================================= */
+h1{font-family:var(--fh);font-weight:800;font-size:var(--ts);line-height:1.05;letter-spacing:-.02em;}
+h2{font-family:var(--fh);font-weight:700;font-size:var(--hs);line-height:1.15;letter-spacing:-.01em;}
+h3{font-family:var(--fh);font-weight:600;font-size:clamp(.82rem,1.6vw,1.15rem);}
+p,li{font-size:var(--bs);line-height:1.6;}
+
+.light .accent { color:var(--teal); }
+.dark-teal .accent,
+.dark-navy .accent,
+.dark-deep .accent{ color:var(--mint); }
+.light .dim-txt { color:var(--dim); }
+.dark-teal .dim-txt,
+.dark-navy .dim-txt,
+.dark-deep .dim-txt{ color:rgba(237,235,228,.55); }
+
+/* =============================================
+   TABLE
+   ============================================= */
+table{width:100%;border-collapse:collapse;}
+.light th{
+  font-family:var(--fh);font-weight:700;
+  font-size:var(--ss);letter-spacing:.1em;text-transform:uppercase;
+  color:var(--teal);
+  padding:clamp(.35rem,.9vh,.65rem) clamp(.5rem,1vw,.85rem);
+  border-bottom:1px solid rgba(22,78,89,.2);text-align:left;
+}
+.light td{
+  padding:clamp(.32rem,.8vh,.6rem) clamp(.5rem,1vw,.85rem);
+  border-bottom:1px solid rgba(7,18,30,.06);
+  font-size:var(--bs);color:var(--text2);vertical-align:top;line-height:1.5;
+}
+.light tr:last-child td{border-bottom:none;}
+.light td:first-child{color:var(--dim);white-space:nowrap;}
+
+/* Dark table */
+.dark-teal th,.dark-navy th,.dark-deep th{
+  font-family:var(--fh);font-weight:700;
+  font-size:var(--ss);letter-spacing:.1em;text-transform:uppercase;
+  color:var(--mint);
+  padding:clamp(.35rem,.9vh,.65rem) clamp(.5rem,1vw,.85rem);
+  border-bottom:1px solid rgba(100,217,162,.2);text-align:left;
+}
+.dark-teal td,.dark-navy td,.dark-deep td{
+  padding:clamp(.32rem,.8vh,.6rem) clamp(.5rem,1vw,.85rem);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  font-size:var(--bs);color:var(--cream);vertical-align:top;line-height:1.5;
+}
+.dark-teal tr:last-child td,
+.dark-navy tr:last-child td,
+.dark-deep tr:last-child td{border-bottom:none;}
+.dark-teal td:first-child,
+.dark-navy td:first-child,
+.dark-deep td:first-child{color:rgba(237,235,228,.55);}
+
+/* =============================================
+   TASK ROW
+   ============================================= */
+.tasks{display:flex;flex-direction:column;gap:var(--gap);}
+.task{
+  display:grid;
+  grid-template-columns:2rem 1fr auto;
+  align-items:start;gap:.55rem;
+  padding:clamp(.4rem,.95vh,.72rem) clamp(.7rem,1.4vw,.95rem);
+  border-radius:8px;
+}
+.light .task{
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(22,78,89,.1);
+}
+.dark-teal .task,
+.dark-navy .task,
+.dark-deep .task{
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.08);
+}
+
+/* Dev task highlight */
+.task.dev{
+  border-left:3px solid #4BB8E0;
+}
+.light .task.dev{ background:rgba(240,248,255,.8); }
+
+.tnum{
+  font-family:var(--fh);font-weight:700;
+  font-size:var(--ss);padding-top:.18em;
+}
+.light  .tnum{ color:var(--teal); }
+.dark-teal .tnum,.dark-navy .tnum,.dark-deep .tnum{ color:var(--mint); }
+
+.ttxt{font-size:var(--bs);line-height:1.5;}
+.light  .ttxt{ color:var(--text2); }
+.dark-teal .ttxt,.dark-navy .ttxt,.dark-deep .ttxt{ color:var(--cream); }
+.ttxt strong{font-weight:600;}
+.light  .ttxt strong{ color:var(--text); }
+.dark-teal .ttxt strong,.dark-navy .ttxt strong,.dark-deep .ttxt strong{ color:var(--cream); }
+.ttxt em{font-style:normal;}
+.light  .ttxt em{ color:var(--dim); font-size:calc(var(--bs)*.9); }
+.dark-teal .ttxt em,.dark-navy .ttxt em,.dark-deep .ttxt em{ color:rgba(237,235,228,.55); font-size:calc(var(--bs)*.9); }
+
+.town{
+  font-family:var(--fh);font-weight:700;
+  font-size:clamp(.52rem,.72vw,.64rem);
+  letter-spacing:.07em;white-space:nowrap;
+  padding-top:.22em;text-transform:uppercase;
+}
+.light  .town{ color:var(--teal); }
+.dark-teal .town,.dark-navy .town,.dark-deep .town{ color:var(--mint); }
+.town.dev-own{ color:#4BB8E0 !important; }
+
+/* =============================================
+   INFO CARD
+   ============================================= */
+.card{
+  border-radius:10px;
+  padding:clamp(.65rem,1.4vw,1.1rem) clamp(.8rem,1.8vw,1.3rem);
+}
+.light .card{
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(22,78,89,.12);
+}
+.dark-teal .card,.dark-navy .card,.dark-deep .card{
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.1);
+}
+.card.accent-left{border-left:3px solid var(--mint);}
+
+/* =============================================
+   SECTION LABEL (small header above content)
+   ============================================= */
+.slabel{
+  font-family:var(--fh);font-weight:700;
+  font-size:var(--ss);letter-spacing:.14em;text-transform:uppercase;
+  padding-bottom:.35em;
+  margin-bottom:calc(var(--gap)*.8);
+}
+.light  .slabel{ color:var(--dim); border-bottom:1px solid rgba(7,18,30,.08); }
+.dark-teal .slabel,.dark-navy .slabel,.dark-deep .slabel{ color:rgba(237,235,228,.45); border-bottom:1px solid rgba(255,255,255,.08); }
+
+/* =============================================
+   NARRATIVE QUOTE
+   ============================================= */
+.narrative{
+  font-style:italic;font-size:var(--bs);
+  line-height:1.75;max-width:660px;
+  padding-left:1rem;margin-top:var(--gap);
+}
+.light  .narrative{ color:var(--dim); border-left:2px solid rgba(22,78,89,.3); }
+.dark-teal .narrative,.dark-navy .narrative,.dark-deep .narrative{ color:rgba(237,235,228,.6); border-left:2px solid rgba(100,217,162,.4); }
+
+/* =============================================
+   WEEK ROW (for phase overview slides)
+   ============================================= */
+.wrow{
+  display:grid;grid-template-columns:auto 1fr;
+  gap:.5rem .85rem;align-items:start;
+  padding:clamp(.38rem,.85vh,.65rem) 0;
+}
+.light  .wrow{ border-bottom:1px solid rgba(7,18,30,.06); }
+.dark-teal .wrow,.dark-navy .wrow,.dark-deep .wrow{ border-bottom:1px solid rgba(255,255,255,.07); }
+.wrow:last-child{border-bottom:none;}
+
+.wlabel{
+  font-family:var(--fh);font-weight:700;
+  font-size:var(--ss);white-space:nowrap;
+  letter-spacing:.06em;padding-top:.14em;
+}
+.light      .wlabel{ color:var(--teal); }
+.dark-teal  .wlabel{ color:var(--lime); }
+.dark-navy  .wlabel{ color:var(--mint); }
+.dark-deep  .wlabel{ color:var(--lime); }
+
+.wtag{font-family:var(--fh);font-size:calc(var(--ss)*.88);opacity:.6;margin-top:.05em;}
+.wname{font-family:var(--fh);font-weight:600;font-size:clamp(.78rem,1.35vw,1rem);margin-bottom:.18em;}
+.wdesc{font-size:calc(var(--bs)*.9);opacity:.65;line-height:1.5;}
+
+/* =============================================
+   BIG PHASE NUMBER (background)
+   ============================================= */
+.big-num{
+  position:absolute;right:var(--pad);top:50%;
+  transform:translateY(-50%);
+  font-family:var(--fh);font-weight:800;
+  font-size:clamp(8rem,22vw,18rem);
+  line-height:.85;letter-spacing:-.05em;
+  opacity:.08;pointer-events:none;user-select:none;z-index:1;
+}
+.dark-teal .big-num{ color:var(--lime); }
+.dark-navy .big-num{ color:var(--lime); }
+.dark-deep .big-num{ color:var(--lime); }
+
+/* =============================================
+   PERSON PILLS
+   ============================================= */
+.persons{display:flex;flex-wrap:wrap;gap:.5rem;}
+.person{
+  font-family:var(--fh);font-weight:700;
+  font-size:clamp(.68rem,1.1vw,.86rem);
+  padding:5px 13px;border-radius:8px;
+}
+.light .person{
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(22,78,89,.15);
+  color:var(--text);
+}
+.person span{
+  display:block;font-weight:400;
+  font-size:calc(var(--ss)*.9);
+}
+.light .person span{ color:var(--dim); }
+.person.dev-p{ border-color:rgba(75,184,224,.4)!important; color:#2A7DAE !important; }
+.light .person.dev-p{ background:rgba(235,247,255,.85); }
+.person.lead-p{ border-color:rgba(22,78,89,.5)!important; background:rgba(22,78,89,.08)!important; color:var(--teal)!important; }
+
+/* =============================================
+   COMPARISON SLIDE ITEMS
+   ============================================= */
+.cmp-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:clamp(.6rem,1.5vw,1.2rem);
+}
+.cmp-col h3{
+  font-family:var(--fh);font-weight:700;
+  font-size:clamp(.78rem,1.4vw,1rem);
+  padding-bottom:.4em;margin-bottom:.5em;
+}
+.light .cmp-col h3.joonas{ color:var(--teal); border-bottom:2px solid rgba(22,78,89,.25); }
+.light .cmp-col h3.felps { color:#9B7FE8; border-bottom:2px solid rgba(155,127,232,.3); }
+.light .cmp-col h3.final { color:var(--teal); border-bottom:2px solid rgba(22,78,89,.25); }
+.light .cmp-col h3.left  { color:#C0392B; border-bottom:2px solid rgba(192,57,43,.2); }
+
+.cmp-list{list-style:none;display:flex;flex-direction:column;gap:.35em;}
+.cmp-list li{
+  font-size:var(--bs);padding-left:1.2em;position:relative;line-height:1.5;
+}
+.light .cmp-list li{ color:var(--text2); }
+.cmp-list li::before{position:absolute;left:0;font-size:.85em;top:.05em;}
+.cmp-list.check li::before{ content:'✓'; color:var(--teal); }
+.cmp-list.purple li::before{ content:'✓'; color:#9B7FE8; }
+.cmp-list.cross  li::before{ content:'✗'; color:#C0392B; }
+
+/* =============================================
+   PILLS (small tags)
+   ============================================= */
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:.5rem;}
+.pill{
+  font-family:var(--fh);font-size:clamp(.55rem,.78vw,.67rem);font-weight:600;
+  padding:3px 10px;border-radius:13px;
+}
+.light      .pill{ border:1px solid rgba(22,78,89,.3); color:var(--dim); }
+.dark-teal  .pill,
+.dark-navy  .pill,
+.dark-deep  .pill{ border:1px solid rgba(205,250,182,.25); color:rgba(237,235,228,.7); }
+
+/* =============================================
+   TITLE SLIDE SPECIAL
+   ============================================= */
+.slide-title{ background:var(--bg); }
+.title-big{
+  font-family:var(--fh);font-weight:800;
+  font-size:clamp(3.5rem,10vw,8rem);
+  line-height:.92;letter-spacing:-.03em;
+  color:var(--deep);
+}
+
+/* =============================================
+   CLOSING SLIDE
+   ============================================= */
+.close-quote{
+  font-family:var(--fh);font-weight:800;
+  font-size:clamp(1.8rem,4.5vw,3.8rem);
+  line-height:1.08;letter-spacing:-.02em;
+  color:var(--cream);max-width:640px;margin:0 auto;
+}
+.close-quote .hl{ color:var(--mint); }
+
+/* =============================================
+   PRIZE
+   ============================================= */
+.prize-big{
+  font-family:var(--fh);font-weight:800;
+  font-size:clamp(2.2rem,6vw,5rem);
+  line-height:1;letter-spacing:-.03em;
+  color:var(--teal);
+}
+
+/* =============================================
+   COMMENT SYSTEM
+   ============================================= */
+
+/* Floating trigger button */
+.cm-btn{
+  position:fixed;bottom:1.5rem;left:1.5rem;
+  width:46px;height:46px;border-radius:50%;
+  background:var(--teal);color:#fff;
+  border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  z-index:9000;
+  box-shadow:0 4px 18px rgba(22,78,89,.45);
+  transition:transform .2s,box-shadow .2s;
+}
+.cm-btn:hover{transform:scale(1.09);box-shadow:0 6px 22px rgba(22,78,89,.55);}
+.cm-btn svg{width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.cm-bubble{
+  position:absolute;top:-5px;right:-5px;
+  background:var(--mint);color:var(--deep);
+  font-size:.58rem;font-weight:800;
+  border-radius:10px;padding:1px 5px;
+  min-width:17px;text-align:center;
+  display:none;line-height:1.4;
+  font-family:var(--fb);
+}
+
+/* Slide panel */
+.cm-panel{
+  position:fixed;right:-370px;top:0;bottom:0;width:340px;
+  background:#fff;
+  box-shadow:-4px 0 32px rgba(0,0,0,.14);
+  z-index:9001;display:flex;flex-direction:column;
+  transition:right .38s cubic-bezier(0.16,1,0.3,1);
+  font-family:var(--fb);
+}
+.cm-panel.open{right:0;}
+
+.cm-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.9rem 1rem .75rem;
+  border-bottom:1px solid rgba(7,18,30,.08);
+  flex-shrink:0;
+}
+.cm-title{font-weight:700;font-size:.88rem;color:var(--deep);}
+.cm-hbtns{display:flex;gap:6px;align-items:center;}
+.cm-act{
+  background:none;border:1px solid rgba(22,78,89,.22);
+  color:var(--teal);font-size:.68rem;font-weight:600;
+  border-radius:5px;padding:3px 9px;cursor:pointer;
+  font-family:var(--fb);white-space:nowrap;
+}
+.cm-act:hover{background:rgba(22,78,89,.06);}
+.cm-close{
+  background:none;border:none;cursor:pointer;
+  font-size:1.25rem;color:var(--dim);padding:0 2px;line-height:1;
+}
+
+.cm-slide-lbl{
+  padding:.4rem 1rem;
+  font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--teal);background:rgba(22,78,89,.05);
+  flex-shrink:0;
+}
+
+.cm-list{
+  flex:1;overflow-y:auto;
+  padding:.55rem 1rem;
+  display:flex;flex-direction:column;gap:.45rem;
+}
+.cm-empty{
+  color:var(--dim);font-size:.78rem;
+  text-align:center;padding-top:1rem;
+}
+.cm-item{
+  background:rgba(22,78,89,.05);
+  border-radius:8px;padding:.6rem .75rem;
+  position:relative;
+}
+.cm-item-top{
+  display:flex;align-items:center;gap:.5rem;
+  margin-bottom:.2rem;flex-wrap:wrap;
+}
+.cm-item-name{font-weight:700;font-size:.76rem;color:var(--teal);}
+.cm-item-time{
+  font-size:.68rem;color:var(--dim2);font-weight:500;
+  background:rgba(22,78,89,.07);border-radius:4px;
+  padding:1px 6px;white-space:nowrap;
+}
+.cm-item-text{font-size:.8rem;color:var(--text2);line-height:1.55;margin-top:.1rem;}
+.cm-del{
+  position:absolute;top:.4rem;right:.5rem;
+  background:none;border:none;cursor:pointer;
+  color:rgba(7,18,30,.2);font-size:.8rem;padding:0;line-height:1;
+}
+.cm-del:hover{color:#c0392b;}
+
+.cm-compose{
+  padding:.65rem 1rem .9rem;
+  border-top:1px solid rgba(7,18,30,.08);
+  display:flex;flex-direction:column;gap:.4rem;
+  flex-shrink:0;
+}
+.cm-name-input,.cm-text-input{
+  font-family:var(--fb);font-size:.78rem;
+  border:1px solid rgba(22,78,89,.2);border-radius:6px;
+  padding:.42rem .65rem;color:var(--deep);outline:none;
+  background:rgba(22,78,89,.03);width:100%;
+  box-sizing:border-box;
+}
+.cm-name-input:focus,.cm-text-input:focus{border-color:var(--teal);}
+.cm-text-input{resize:none;line-height:1.5;}
+.cm-hint{font-size:.62rem;color:var(--dim);text-align:right;}
+.cm-submit{
+  font-family:var(--fb);
+  background:var(--teal);color:#fff;
+  border:none;border-radius:6px;
+  padding:.48rem 1rem;font-size:.78rem;font-weight:600;
+  cursor:pointer;transition:background .2s;
+}
+.cm-submit:hover{background:var(--navy);}
+
+/* Badge shown on slides that have notes */
+.cm-slide-badge{
+  position:absolute;bottom:1rem;left:1.2rem;
+  background:var(--teal);color:#fff;
+  font-size:.6rem;font-weight:700;
+  border-radius:12px;padding:2px 9px;
+  z-index:3;pointer-events:none;opacity:.88;
+  font-family:var(--fb);
+}
+.dark-teal .cm-slide-badge,
+.dark-navy .cm-slide-badge,
+.dark-deep .cm-slide-badge{background:var(--mint);color:var(--deep);}
+
+/* Export/import modal */
+.cm-modal-bg{
+  position:fixed;inset:0;background:rgba(7,18,30,.55);
+  z-index:9500;display:none;align-items:center;justify-content:center;
+}
+.cm-modal-bg.open{display:flex;}
+.cm-modal{
+  background:#fff;border-radius:12px;padding:1.5rem;
+  width:min(90vw,480px);font-family:var(--fb);
+  box-shadow:0 8px 40px rgba(0,0,0,.25);
+}
+.cm-modal h3{font-size:.95rem;font-weight:700;color:var(--deep);margin-bottom:.75rem;}
+.cm-modal textarea{
+  width:100%;border:1px solid rgba(22,78,89,.2);border-radius:6px;
+  padding:.6rem .75rem;font-family:var(--fb);font-size:.76rem;
+  color:var(--deep);line-height:1.5;outline:none;resize:vertical;
+  box-sizing:border-box;
+}
+.cm-modal textarea:focus{border-color:var(--teal);}
+.cm-modal-btns{display:flex;gap:.5rem;justify-content:flex-end;margin-top:.75rem;}
+.cm-modal-btn{
+  font-family:var(--fb);font-size:.78rem;font-weight:600;
+  border-radius:6px;padding:.45rem .95rem;cursor:pointer;border:none;
+}
+.cm-modal-btn.primary{background:var(--teal);color:#fff;}
+.cm-modal-btn.primary:hover{background:var(--navy);}
+.cm-modal-btn.ghost{background:none;border:1px solid rgba(22,78,89,.25);color:var(--teal);}
+.cm-modal-btn.ghost:hover{background:rgba(22,78,89,.06);}
+
+</style>
+</head>
+<body>
+
+<!-- PROGRESS BAR -->
+<div class="progress-bar" id="progressBar"></div>
+<!-- NAV DOTS -->
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- =============================================
+   COMMENT SYSTEM UI
+   ============================================= -->
+
+<!-- Floating trigger button -->
+<button class="cm-btn" id="cmBtn" title="Slide notes (C)">
+  <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  <span class="cm-bubble" id="cmBubble"></span>
+</button>
+
+<!-- Comment panel -->
+<div class="cm-panel" id="cmPanel" role="dialog" aria-label="Slide notes">
+  <div class="cm-header">
+    <div style="display:flex;flex-direction:column;gap:2px;">
+      <span class="cm-title">Slide Notes</span>
+      <span id="cmStatus" style="font-size:.6rem;font-weight:600;font-family:var(--fb);"></span>
+    </div>
+    <div class="cm-hbtns">
+      <button class="cm-act" id="cmSyncBtn" title="Refresh notes now">↻ Sync</button>
+      <button class="cm-act" id="cmExportText" title="Copy all notes as text">Copy Notes</button>
+      <button class="cm-act" id="cmSettingsBtn" title="Connect / reconfigure Google Sheets">⚙</button>
+      <button class="cm-close" id="cmClose" aria-label="Close">×</button>
+    </div>
+  </div>
+  <div class="cm-slide-lbl" id="cmSlideLbl">Slide 1 / 22</div>
+  <div class="cm-list" id="cmList"></div>
+  <div class="cm-compose">
+    <input class="cm-name-input" id="cmName" placeholder="Your name" maxlength="40" autocomplete="name">
+    <textarea class="cm-text-input" id="cmText" placeholder="Add a note for this slide…" rows="3" maxlength="600"></textarea>
+    <div class="cm-hint">Ctrl+Enter to submit</div>
+    <button class="cm-submit" id="cmSubmit">Add Note</button>
+  </div>
+</div>
+
+<!-- Setup / connect modal -->
+<div class="cm-modal-bg" id="cmModalBg">
+  <div class="cm-modal">
+    <h3 id="cmModalTitle">Connect to Google Sheets</h3>
+    <textarea id="cmImportArea" rows="4" placeholder="Paste your Apps Script Web App URL here&#10;(starts with https://script.google.com/macros/s/...)"></textarea>
+    <div class="cm-modal-btns">
+      <button class="cm-modal-btn ghost" id="cmModalCancel">Cancel</button>
+      <button class="cm-modal-btn primary" id="cmModalConfirm">Connect</button>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- ============================================================
+  01 — TITLE
+============================================================ -->
+<section class="slide light slide-title" id="s1">
+  <!-- Watermark -->
+  <img class="watermark" src="assets/watermark.png" alt="">
+
+  <div class="topbar">
+    <div class="logo-mark">
+      <img class="logo-img" src="assets/logo.png" alt="Hedgehog">
+    </div>
+    <span class="snum">01 / 22</span>
+  </div>
+
+  <div class="body" style="justify-content:center;">
+    <p class="rev" style="font-family:var(--fh);font-size:var(--ss);letter-spacing:.2em;text-transform:uppercase;color:var(--teal);margin-bottom:clamp(.4rem,1.2vh,.9rem);">The Prediction Market for On-Chain Metrics</p>
+    <h1 class="title-big rev">LAUNCH<br>PLAN<br><span style="color:var(--teal);">2026</span></h1>
+    <div class="pills rev" style="margin-top:clamp(.8rem,2vh,1.5rem);">
+      <span class="pill" style="color:var(--p1);border-color:rgba(22,78,89,.5);background:rgba(22,78,89,.07);">Phase 1 · Weeks 1–3 · Pre-Hype</span>
+      <span class="pill" style="color:var(--p2);border-color:rgba(21,43,64,.5);background:rgba(21,43,64,.07);">Phase 2 · Weeks 4–6 · Private Testnet</span>
+      <span class="pill" style="color:var(--p3);border-color:rgba(7,18,30,.4);background:rgba(7,18,30,.06);">Phase 3 · Weeks 7–9 · Public Testnet</span>
+    </div>
+    <p class="rev" style="margin-top:clamp(.6rem,1.5vh,1.2rem);font-size:var(--ss);color:var(--dim);">Presented to Esko · Marketing + Dev Team · March 2026</p>
+  </div>
+</section>
+
+
+<!-- ============================================================
+  02 — CAMPAIGN OVERVIEW
+============================================================ -->
+<section class="slide light" id="s2">
+  <img class="watermark" src="assets/watermark.png" alt="">
+  <div class="topbar">
+    <div class="logo-mark"><img class="logo-img" src="assets/logo.png" alt="Hedgehog"></div>
+    <div style="display:flex;align-items:center;gap:.8rem;"><span class="badge">Overview</span><span class="snum">02 / 22</span></div>
+  </div>
+  <div class="body">
+    <h2 class="rev" style="margin-bottom:clamp(.5rem,1.5vh,1.1rem);">9 Weeks · 3 Phases · One <span class="accent">Goal</span></h2>
+    <div class="rev" style="overflow:hidden;">
+      <table>
+        <thead><tr><th>Phase</th><th>Focus</th><th>Audience</th><th>Timeline</th></tr></thead>
+        <tbody>
+          <tr>
+            <td style="color:var(--teal)!important;font-family:var(--fh);font-weight:700;">Phase 1<br><span style="color:var(--dim);font-family:var(--fb);font-weight:400;">Pre-Hype</span></td>
+            <td style="color:var(--text2)!important;">Content engine, X Ads, waitlist building</td>
+            <td style="color:var(--text2)!important;">Broad crypto + prediction market audience</td>
+            <td style="color:var(--text)!important;font-family:var(--fh);font-weight:700;">Weeks 1–3</td>
+          </tr>
+          <tr>
+            <td style="color:var(--navy)!important;font-family:var(--fh);font-weight:700;">Phase 2<br><span style="color:var(--dim);font-family:var(--fb);font-weight:400;">Private Testnet</span></td>
+            <td style="color:var(--text2)!important;">Handpicked KOLs, $1K trading competition, feedback</td>
+            <td style="color:var(--text2)!important;">Prediction market power users &amp; KOLs</td>
+            <td style="color:var(--text)!important;font-family:var(--fh);font-weight:700;">Weeks 4–6</td>
+          </tr>
+          <tr>
+            <td style="color:var(--deep)!important;font-family:var(--fh);font-weight:700;">Phase 3<br><span style="color:var(--dim);font-family:var(--fb);font-weight:400;">Public Testnet</span></td>
+            <td style="color:var(--text2)!important;">Prediction Type cards, open access, viral leaderboard</td>
+            <td style="color:var(--text2)!important;">Everyone — waitlist → open</td>
+            <td style="color:var(--text)!important;font-family:var(--fh);font-weight:700;">Weeks 7–9</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="narrative rev">"Prediction markets are a $2B+ category, but nobody built for the metrics that actually run crypto. Hedgehog is coming to change that."</div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+  03 — TIMELINE ROADMAP
+============================================================ -->
+<section class="slide light" id="s-roadmap1">
+  <img class="watermark" src="assets/watermark.png" alt="">
+  <div class="topbar">
+    <div class="logo-mark"><img class="logo-img" src="assets/logo.png" alt="Hedgehog"></div>
+    <div style="display:flex;align-items:center;gap:.8rem;"><span class="badge">Timeline</span><span class="snum">03 / 22</span></div>
+  </div>
+  <div class="body">
+    <h2 class="rev" style="margin-bottom:clamp(.5rem,1.5vh,1rem);">9-Week <span class="accent">Timeline</span> at a Glance</h2>
+
+    <!-- Phase 1 -->
+    <div class="rev" style="margin-bottom:var(--gap);">
+      <div class="slabel" style="color:var(--teal);">Phase 1 — Pre-Hype &nbsp;·&nbsp; Weeks 1–3</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:clamp(.35rem,1vw,.7rem);">
+        <div class="card" style="border-left:3px solid var(--teal);">
+          <div style="font-size:var(--ss);font-weight:700;color:var(--teal);letter-spacing:.06em;margin-bottom:.25em;">WEEK 1 · "The Signal"</div>
+          <div style="font-size:var(--bs);color:var(--text2);line-height:1.5;">Hype video · Market article · Clippers batch 1 · X Ads Campaign 1 (Awareness, $500)</div>
+        </div>
+        <div class="card" style="border-left:3px solid var(--teal);">
+          <div style="font-size:var(--ss);font-weight:700;color:var(--teal);letter-spacing:.06em;margin-bottom:.25em;">WEEK 2 · "The Edge"</div>
+          <div style="font-size:var(--bs);color:var(--text2);line-height:1.5;">Comparison article · "Why on Base" video · Education clippers · 4–5 social posts</div>
+        </div>
+        <div class="card" style="border-left:3px solid var(--teal);">
+          <div style="font-size:var(--ss);font-weight:700;color:var(--teal);letter-spacing:.06em;margin-bottom:.25em;">WEEK 3 · "The Countdown"</div>
+          <div style="font-size:var(--bs);color:var(--text2);line-height:1.5;">Partnership announcement · X Ads Campaign 2 (Urgency) · Waitlist hard push</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 2 -->
+    <div class="rev" style="margin-bottom:var(--gap);">
+      <div class="slabel" style="color:var(--navy);">Phase 2 — Private Testnet &nbsp;·&nbsp; Weeks 4–6</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:clamp(.35rem,1vw,.7rem);">
+        <div class="card" style="border-left:3px solid var(--navy);">
+          <div style="font-size:var(--ss);font-weight:700;color:var(--navy);letter-spacing:.06em;margin-bottom:.25em;">WEEK 4 · "The Handpick"</div>
+          <div style="font-size:var(--bs);color:var(--text2);line-height:1.5;">KOL outreach · Testnet invites · Behind-the-scenes content · X Ads Campaign 3</div>
+        </div>
+        <div class="card" style="border-left:3px solid var(--navy);">
+          <div style="font-size:var(--ss);font-weight:700;color:var(--navy);letter-spacing:.06em;margin-bottom:.25em;">WEEK 5 · "The Arena"</div>
+          <div style="font-size:var(--bs);color:var(--text2);line-height:1.5;">$1K trading competition · Feedback form live · Community discussions · 5 target communities</div>
+        </div>
+        <div class="card" style="border-left:3px solid var(--navy);">
+          <div style="font-size:var(--ss);font-weight:700;color:var(--navy);letter-spacing:.06em;margin-bottom:.25em;">WEEK 6 · "The Proof"</div>
+          <div style="font-size:var(--bs);color:var(--text2);line-height:1.5;">Competition results · KOL recap content · +25–30 extra invites · Tease public testnet</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 3 -->
+    <div class="rev">
+      <div class="slabel" style="color:var(--deep);">Phase 3 — Public Testnet &nbsp;·&nbsp; Weeks 7–9</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:clamp(.35rem,1vw,.7rem);">
+        <div class="card" style="border-left:3px solid var(--deep);">
+          <div style="font-size:var(--ss);font-weight:700;color:var(--deep);letter-spacing:.06em;margin-bottom:.25em;">WEEK 7 · "The Unlock"</div>
+          <div style="font-size:var(--bs);color:var(--text2);line-height:1.5;">Public testnet open · Prediction Type cards drop · Leaderboard live · X Ads Campaign 4</div>
+        </div>
+        <div class="card" style="border-left:3px solid var(--deep);">
+          <div style="font-size:var(--ss);font-weight:700;color:var(--deep);letter-spacing:.06em;margin-bottom:.25em;">WEEK 8 · "The Wave"</div>
+          <div style="font-size:var(--bs);color:var(--text2);line-height:1.5;">KOL viral amplification · Community referrals · More clippers · Extended invite reach</div>
+        </div>
+        <div class="card" style="border-left:3px solid var(--deep);">
+          <div style="font-size:var(--ss);font-weight:700;color:var(--deep);letter-spacing:.06em;margin-bottom:.25em;">WEEK 9 · "The Foundation"</div>
+          <div style="font-size:var(--bs);color:var(--text2);line-height:1.5;">Mainnet teaser · Loyalty tier prep · Final feedback · Closed community discussion</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+  04 — DELIVERABLES ROADMAP
+============================================================ -->
+<section class="slide light" id="s-roadmap2">
+  <img class="watermark" src="assets/watermark.png" alt="">
+  <div class="topbar">
+    <div class="logo-mark"><img class="logo-img" src="assets/logo.png" alt="Hedgehog"></div>
+    <div style="display:flex;align-items:center;gap:.8rem;"><span class="badge">Deliverables</span><span class="snum">04 / 22</span></div>
+  </div>
+  <div class="body">
+    <h2 class="rev" style="margin-bottom:clamp(.4rem,1.2vh,.85rem);">All <span class="accent">Deliverables</span> by Phase</h2>
+
+    <div class="rev" style="overflow:hidden;">
+      <table>
+        <thead>
+          <tr><th>Phase</th><th>Deliverable</th><th>Owner</th><th>Ref.</th></tr>
+        </thead>
+        <tbody>
+          <!-- Phase 1 -->
+          <tr><td style="color:var(--teal)!important;font-weight:700;">Phase 1</td><td>Hype video (W1) + "Why on Base" video (W2)</td><td>Nai</td><td>1.1 / 1.5</td></tr>
+          <tr><td></td><td>Market opportunity article (W1) + Comparison article (W2)</td><td>Felps</td><td>1.2 / 1.4</td></tr>
+          <tr><td></td><td>Clippers batches 1–2 (3–5 clips each)</td><td>Felps</td><td>1.3 / 1.7</td></tr>
+          <tr><td></td><td>Social posts (4–5/week) · References</td><td>Provabz</td><td>1.6</td></tr>
+          <tr><td></td><td>X Ads Campaign 1 — Awareness ($500) · Campaign 2 — Urgency</td><td>Joonas</td><td>1.8 / 1.9</td></tr>
+          <tr><td></td><td>Partnership announcement</td><td>Joonas + Esko</td><td>1.10</td></tr>
+          <tr><td></td><td>Prediction Type card designs (20 types)</td><td>Fonseca</td><td>1.11</td></tr>
+          <!-- Phase 2 -->
+          <tr><td style="color:var(--navy)!important;font-weight:700;">Phase 2</td><td>KOL outreach list (criteria: 5K–500K+, Monad ecosystem)</td><td>Joonas</td><td>2.1</td></tr>
+          <tr><td></td><td>Testnet invites to waitlist</td><td>Dev (Bruno)</td><td>2.2</td></tr>
+          <tr><td></td><td>$1K trading competition (prize + HOG points)</td><td>Esko + Dev</td><td>2.3</td></tr>
+          <tr><td></td><td>Feedback form (6 Qs + NPS) · Community discussions</td><td>Felps</td><td>2.4</td></tr>
+          <tr><td></td><td>X Ads Campaign 3 · Behind-the-scenes content</td><td>Joonas / Nai</td><td>2.5 / 2.6</td></tr>
+          <tr><td></td><td>Competition results post · +25–30 extra invites</td><td>Provabz / Dev</td><td>2.7 / 2.8</td></tr>
+          <!-- Phase 3 -->
+          <tr><td style="color:var(--deep)!important;font-weight:700;">Phase 3</td><td>Public testnet open · Leaderboard live</td><td>Dev team</td><td>3.1 / 3.2</td></tr>
+          <tr><td></td><td>Prediction Type cards public distribution</td><td>Fonseca + Dev</td><td>3.3</td></tr>
+          <tr><td></td><td>X Ads Campaign 4 · KOL viral amplification</td><td>Joonas</td><td>3.4 / 3.5</td></tr>
+          <tr><td></td><td>Community referrals · 5 target communities</td><td>Felps / Provabz</td><td>3.6 / 3.7</td></tr>
+          <tr><td></td><td>Clippers batch 3 · Recap content</td><td>Felps / Nai</td><td>3.8 / 3.9</td></tr>
+          <tr><td></td><td>Loyalty tiers prep · Closed community</td><td>Esko + Felps</td><td>3.10</td></tr>
+          <tr><td></td><td>Mainnet teaser</td><td>All</td><td>3.11</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+  05 — TEAM
+============================================================ -->
+<section class="slide light" id="s05">
+  <img class="watermark" src="assets/watermark.png" alt="">
+  <div class="topbar">
+    <div class="logo-mark"><img class="logo-img" src="assets/logo.png" alt="Hedgehog"></div>
+    <div style="display:flex;align-items:center;gap:.8rem;"><span class="badge">Team</span><span class="snum">05 / 22</span></div>
+  </div>
+  <div class="body">
+    <h2 class="rev" style="margin-bottom:clamp(.6rem,1.8vh,1.3rem);">Who Does <span class="accent">What</span></h2>
+
+    <div class="rev" style="margin-bottom:var(--gap);">
+      <div class="slabel">Marketing Team</div>
+      <div class="persons">
+        <div class="person"><strong>FELPS</strong><span>Articles · Clippers · Community</span></div>
+        <div class="person"><strong>JOONAS</strong><span>KOL Relations · X Ads</span></div>
+        <div class="person"><strong>PROVABZ</strong><span>Social Posts · References</span></div>
+        <div class="person"><strong>FONSECA</strong><span>Visual Design · Cards (20 types)</span></div>
+        <div class="person"><strong>NAI</strong><span>Video Production</span></div>
+      </div>
+    </div>
+
+    <div class="rev" style="margin-bottom:var(--gap);">
+      <div class="slabel">Dev Team</div>
+      <div class="persons">
+        <div class="person dev-p"><strong>BRUNO</strong><span>Lead Dev</span></div>
+        <div class="person dev-p"><strong>SERAFIM</strong><span>Dev</span></div>
+        <div class="person dev-p"><strong>ALEX</strong><span>Dev</span></div>
+      </div>
+    </div>
+
+    <div class="rev" style="margin-bottom:var(--gap);">
+      <div class="slabel">Lead</div>
+      <div class="persons">
+        <div class="person lead-p"><strong>ESKO</strong><span>Product Lead · Final Decisions</span></div>
+      </div>
+    </div>
+
+    <div class="rev card" style="margin-top:calc(var(--gap)*.8);">
+      <p style="font-size:var(--bs);color:var(--dim);">This presentation is the single source of truth for all 9 weeks. Every task has a clear owner. Open questions are flagged for Esko.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+  04 — PHASE 1 HEADER (dark teal)
+============================================================ -->
+<section class="slide dark-teal" id="s06">
+  <img class="watermark" src="assets/watermark.png" alt="">
+  <div class="big-num">1</div>
+  <div class="topbar">
+    <div class="logo-mark"><img class="logo-img" src="assets/logo.png" alt="Hedgehog"></div>
+    <div style="display:flex;align-items:center;gap:.8rem;"><span class="badge">Phase 1 · Weeks 1–3</span><span class="snum">06 / 22</span></div>
+  </div>
+  <div class="body">
+    <p class="rev dim-txt" style="font-size:var(--ss);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.35em;">Pre-Launch Hype</p>
+    <h2 class="rev" style="color:var(--lime);margin-bottom:var(--gap);font-size:clamp(1.3rem,3.5vw,2.5rem);">Build the Audience. Build the Waitlist.</h2>
+
+    <div class="rev tasks" style="max-width:700px;">
+      <div class="wrow">
+        <div><div class="wlabel">Week 1</div><div class="wtag">"The Signal"</div></div>
+        <div>
+          <div class="wname">Introduce the opportunity gap. Plant curiosity.</div>
+          <div class="wdesc">Hype video · Market opportunity article · Clippers batch 1 · X Ads Campaign 1 — Awareness ($500)</div>
+        </div>
+      </div>
+      <div class="wrow">
+        <div><div class="wlabel">Week 2</div><div class="wtag">"The Edge"</div></div>
+        <div>
+          <div class="wname">Position Hedgehog as its own category.</div>
+          <div class="wdesc">Comparison article · "Why on Base" video · Education clippers · Social posts 4–5 pieces</div>
+        </div>
+      </div>
+      <div class="wrow">
+        <div><div class="wlabel">Week 3</div><div class="wtag">"The Countdown"</div></div>
+        <div>
+          <div class="wname">Build urgency. Private testnet is almost here.</div>
+          <div class="wdesc">Partnership announcement · X Ads Campaign 2 — Urgency · Hard waitlist push</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="narrative rev">"The testnet is invite-only. Get on the waitlist before the gates open."</div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+  05 — PHASE 1 · WEEK 1
+============================================================ -->
+<section class="slide light" id="s07">
+  <img class="watermark" src="assets/watermark.png" alt="">
+  <div class="topbar">
+    <div class="logo-mark"><img class="logo-img" src="assets/logo.png" alt="Hedgehog"></div>
+    <div style="display:flex;align-items:center;gap:.8rem;"><span class="badge">Phase 1 · Week 1 — "The Signal"</span><span class="snum">07 / 22</span></div>
+  </div>
+  <div class="body">
+    <h2 class="rev" style="margin-bottom:clamp(.45rem,1.2vh,.9rem);">Week 1 <span class="accent">Deliverables</span></h2>
+    <div class="tasks">
+      <div class="task rev">
+        <span class="tnum">1.1</span>
+        <span class="ttxt"><strong>Hype Video — "The Future is Predictable"</strong><br><em>Cinematic trailer · fast cuts · data on screen · dark bg + neon accents. Arc: Polymarket $2.3B → Kalshi funding → "Nobody built for what actually runs crypto" → Hedgehog reveal</em></span>
+        <span class="town">NAI</span>
+      </div>
+      <div class="task rev">
+        <span class="tnum">1.2</span>
+        <span class="ttxt"><strong>Article — Market Size &amp; Opportunity</strong><br><em>Hook → Blind Spot → The Gap ($6.8B in gas fees, zero markets) → Hedgehog → CTA: Waitlist. Data: Polymarket $2.3B, Kalshi $185M/$5B val, Gas fees ~$6.8B/2024, Limitless $7M, Opinion $5M, Bluff $333M FDV</em></span>
+        <span class="town">FELPS</span>
+      </div>
+      <div class="task rev">
+        <span class="tnum">1.3</span>
+        <span class="ttxt"><strong>Clippers — Waitlist Promotion (Batch 1)</strong><br><em>Short clips promoting the waitlist. Runs throughout Phase 1.</em></span>
+        <span class="town">FELPS</span>
+      </div>
+      <div class="task rev">
+        <span class="tnum">1.4</span>
+        <span class="ttxt"><strong>X Ads Campaign 1 — Awareness · Budget $500</strong><br><em>Creative A: hype video clip 15s + "Waitlist open in 3 weeks" CTA · Creative B: "$2.3B traded on predictions. $0 on the metrics that matter." · Target: PM enthusiasts, DeFi traders, Polymarket/Kalshi followers</em></span>
+        <span class="town">JOONAS</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+  06 — PHASE 1 · WEEKS 2–3
+============================================================ -->
+<section class="slide light" id="s08">
+  <img class="watermark" src="assets/watermark.png" alt="">
+  <div class="topbar">
+    <div class="logo-mark"><img class="logo-img" src="assets/logo.png" alt="Hedgehog"></div>
+    <div style="display:flex;align-items:center;gap:.8rem;"><span class="badge">Phase 1 · Weeks 2–3 — "The Edge" + "The Countdown"</span><span class="snum">08 / 22</span></div>
+  </div>
+  <div class="body">
+    <h2 class="rev" style="margin-bottom:clamp(.45rem,1.2vh,.9rem);">Weeks 2–3 <span class="accent">Deliverables</span></h2>
+    <div class="tasks">
+      <div class="task rev">
+        <span class="tnum">1.5</span>
+        <span class="ttxt"><strong>Article — Hedgehog vs Prediction Market Landscape</strong><br><em>Positioning piece: Polymarket (elections/sports) · Kalshi (regulated US) · Opinion (macro, not on-chain) · Limitless (crypto prices) → Hedgehog: only on-chain metrics platform</em></span>
+        <span class="town">FELPS</span>
+      </div>
+      <div class="task rev">
+        <span class="tnum">1.6</span>
+        <span class="ttxt"><strong>Video — "Why on Base"</strong><br><em>30–60s explainer. Trust, speed, ecosystem growth. Note: don't limit messaging to Base only — architecture can expand to multi-chain later.</em></span>
+        <span class="town">NAI</span>
+      </div>
+      <div class="task rev">
+        <span class="tnum">1.7</span>
+        <span class="ttxt"><strong>Clippers — Education Batch</strong><br><em>"What are on-chain prediction markets?" · competitive comparison hooks · "Why Base?" teaser</em></span>
+        <span class="town">FELPS</span>
+      </div>
+      <div class="task rev">
+        <span class="tnum">1.8</span>
+        <span class="ttxt"><strong>Social Media Posts — 4 to 5 pieces</strong><br><em>Mix of educational, positioning, and CTA. Supporting the articles and videos.</em></span>
+        <span class="town">FELPS + PROVABZ</span>
+      </div>
+      <div class="task rev">
+        <span class="tnum">1.9</span>
+        <span class="ttxt"><strong>Partnership Announcement</strong><br><em>Co-branded piece: how prediction markets evolved and where they're headed. Gather prediction communities for Phase 2.</em></span>
+        <span class="town">JOONAS</span>
+      </div>
+      <div class="task rev">
+        <span class="tnum">1.10</span>
+        <span class="ttxt"><strong>X Ads Campaign 2 — Urgency</strong><br><em>"Private testnet launching next week. Spots are limited." · Retarget waitlist visitors + broad push · Countdown-style creative with product teaser</em></span>
+        <span class="town">JOONAS</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+  07 — PHASE 2 HEADER (dark navy)
+============================================================ -->
+<section class="slide dark-navy" id="s09">
+  <img class="watermark" src="assets/watermark.png" alt="">
+  <div class="big-num">2</div>
+  <div class="topbar">
+    <div class="logo-mark"><img class="logo-img" src="assets/logo.png" alt="Hedgehog"></div>
+    <div style="display:flex;align-items:center;gap:.8rem;"><span class="badge">Phase 2 · Weeks 4–6</span><span class="snum">09 / 22</span></div>
+  </div>
+  <div class="body">
+    <p class="rev dim-txt" style="font-size:var(--ss);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.35em;">Private Testnet</p>
+    <h2 class="rev" style="color:var(--mint);margin-bottom:var(--gap);font-size:clamp(1.3rem,3.5vw,2.5rem);">50 KOLs. Live Competition. Real FOMO.</h2>
+
+    <div class="rev tasks" style="max-width:700px;">
+      <div class="wrow">
+        <div><div class="wlabel">Week 4</div><div class="wtag">"The Inner Circle"</div></div>
+        <div>
+          <div class="wname">Gates open — only for the handpicked.</div>
+          <div class="wdesc">10+ communities targeted · Personal outreach, no mass DMs · KOL content seeding begins · Closed community setup</div>
+        </div>
+      </div>
+      <div class="wrow">
+        <div><div class="wlabel">Week 5</div><div class="wtag">"The Arena"</div></div>
+        <div>
+          <div class="wname">Trading competition live. Leaderboard is public.</div>
+          <div class="wdesc">KOLs share results in waves · Leaderboard screenshots · Strategy posts · Feedback form mandatory</div>
+        </div>
+      </div>
+      <div class="wrow">
+        <div><div class="wlabel">Week 6</div><div class="wtag">"The Proof"</div></div>
+        <div>
+          <div class="wname">Competition ends. Winners announced. Proof of concept.</div>
+          <div class="wdesc">Strategy showcases published · Winners become Phase 3 ambassadors · X Ads Campaign 3 — Social Proof</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="narrative rev">"The best prediction market traders in crypto are already inside Hedgehog. They're competing, sharing alpha, and the leaderboard doesn't lie. Want in? You need a personal invite."</div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+  08 — PHASE 2 · KOL SELECTION
+============================================================ -->
+<section class="slide light" id="s10">
+  <img class="watermark" src="assets/watermark.png" alt="">
+  <div class="topbar">
+    <div class="logo-mark"><img class="logo-img" src="assets/logo.png" alt="Hedgehog"></div>
+    <div style="display:flex;align-items:center;gap:.8rem;"><span class="badge">Phase 2 · Week 4 — KOL Selection</span><span class="snum">10 / 22</span></div>
+  </div>
+  <div class="body">
+    <h2 class="rev" style="margin-bottom:clamp(.45rem,1.2vh,.9rem);">Who Gets <span class="accent">In</span></h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(.7rem,1.8vw,1.4rem);">
+      <div class="rev">
+        <div class="slabel">Selection Criteria</div>
+        <table>
+          <tbody>
+            <tr><td>Trading experience</td><td style="color:var(--text2)!important;">Active on Polymarket / Kalshi / Opinion / Limitless</td></tr>
+            <tr><td>Twitter presence</td><td style="color:var(--text2)!important;">Engaged audience, prediction market content</td></tr>
+            <tr><td>Network access</td><td style="color:var(--text2)!important;">Insiders in PM communities &amp; private groups</td></tr>
+            <tr><td>Content ability</td><td style="color:var(--text2)!important;">Threads, videos, breakdowns, strategy posts</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:var(--ss);color:var(--dim);margin-top:.55em;">Personal outreach only — no mass DMs · Owner: <strong style="color:var(--teal);">JOONAS</strong> + team referrals</p>
+      </div>
+      <div class="rev">
+        <div class="slabel">Target Communities</div>
+        <table>
+          <tbody>
+            <tr><td>Prediction Arc</td><td style="color:var(--text2)!important;">Traders, builders, creators (active TG)</td></tr>
+            <tr><td>Polymarket Trade</td><td style="color:var(--text2)!important;">Polymarket trading community</td></tr>
+            <tr><td>ZSC DAO</td><td style="color:var(--text2)!important;">Polymarket content creators &amp; builders</td></tr>
+            <tr><td>Kalshi Eco Affiliates</td><td style="color:var(--text2)!important;">Kalshi trading community</td></tr>
+            <tr><td>X-Ray Army</td><td style="color:var(--text2)!important;">Opinion Labs community</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:var(--ss);color:var(--dim);margin-top:.55em;">Why competitor users? Already active traders → most relevant audience.</p>
+      </div>
+    </div>
+    <div class="rev card" style="margin-top:var(--gap);">
+      <p style="font-size:var(--bs);color:var(--text2);">
+        <strong style="color:var(--teal);">2.2 DEV TASK (Bruno / Serafim / Alex) — Hard deadline:</strong> Update leaderboard from top 3 to <strong>top 50 users</strong> before Week 4 starts. Phase 2 cannot launch without this.<br>
+        <span style="color:var(--dim);">2.3 KOL Content Kits — <strong style="color:var(--teal);">JOONAS:</strong> talking points, data visuals, suggested formats · 2.4 Closed Community — <strong style="color:var(--teal);">FELPS:</strong> set up private Telegram or Discord for beta users</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+  09 — PHASE 2 · TRADING COMPETITION + FEEDBACK
+============================================================ -->
+<section class="slide light" id="s11">
+  <img class="watermark" src="assets/watermark.png" alt="">
+  <div class="topbar">
+    <div class="logo-mark"><img class="logo-img" src="assets/logo.png" alt="Hedgehog"></div>
+    <div style="display:flex;align-items:center;gap:.8rem;"><span class="badge">Phase 2 · Week 5 — Trading Competition</span><span class="snum">11 / 22</span></div>
+  </div>
+  <div class="body">
+    <h2 class="rev" style="margin-bottom:clamp(.45rem,1.2vh,.9rem);">Competition <span class="accent">Parameters</span></h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(.7rem,1.8vw,1.4rem);">
+      <div class="rev">
+        <table>
+          <tbody>
+            <tr><td>Duration</td><td style="color:var(--text2)!important;">2 weeks — Weeks 5 + 6</td></tr>
+            <tr><td>Participants</td><td style="color:var(--text2)!important;">All invited KOLs + community members</td></tr>
+            <tr><td>Starting balance</td><td style="color:var(--text2)!important;"><strong>TBD with Esko</strong> — $100 to $1,000</td></tr>
+            <tr><td>Scoring</td><td style="color:var(--text2)!important;">Highest PnL wins</td></tr>
+            <tr><td>Top-up rule</td><td style="color:var(--text2)!important;"><strong>TBD with Esko</strong> — can players refill?</td></tr>
+            <tr><td>Leaderboard</td><td style="color:var(--text2)!important;">Public — top 50 visible</td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:clamp(.6rem,1.5vh,1.1rem);">
+          <div class="prize-big">$1,000</div>
+          <p style="font-size:var(--ss);color:var(--dim);margin-top:.25em;">Prize pool + HOG Points · Distribution structure TBD with Esko</p>
+        </div>
+      </div>
+      <div class="rev">
+        <div class="slabel">Mandatory Feedback Form — Before rewards paid out</div>
+        <table>
+          <tbody>
+            <tr><td>Q1</td><td style="color:var(--text2)!important;">Which platforms do you currently use for prediction markets?</td></tr>
+            <tr><td>Q2</td><td style="color:var(--text2)!important;">What did you like most about trading on Hedgehog?</td></tr>
+            <tr><td>Q3</td><td style="color:var(--text2)!important;">Biggest friction point or missing feature?</td></tr>
+            <tr><td>Q4</td><td style="color:var(--text2)!important;">Which feature to prioritize before public launch?</td></tr>
+            <tr><td>Q5</td><td style="color:var(--text2)!important;">Bug reports (open field)</td></tr>
+            <tr><td>Q6</td><td style="color:var(--text2)!important;">NPS: 0–10 likelihood to recommend Hedgehog</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:var(--ss);color:var(--dim);margin-top:.5em;">Owner: <strong style="color:var(--teal);">FELPS</strong> · Build via Google Forms · Data feeds dev priorities before Phase 3</p>
+        <p style="font-size:var(--ss);color:var(--dim);margin-top:.35em;"><strong style="color:var(--teal);">2.6 KOL Amplification:</strong> Coordinate post cadence — content hits in waves, not all at once. Leaderboard screenshots + strategy breakdowns.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+  10 — PHASE 2 · WEEK 6 "THE PROOF"
+============================================================ -->
+<section class="slide light" id="s12">
+  <img class="watermark" src="assets/watermark.png" alt="">
+  <div class="topbar">
+    <div class="logo-mark"><img class="logo-img" src="assets/logo.png" alt="Hedgehog"></div>
+    <div style="display:flex;align-items:center;gap:.8rem;"><span class="badge">Phase 2 · Week 6 — "The Proof"</span><span class="snum">12 / 22</span></div>
+  </div>
+  <div class="body">
+    <h2 class="rev" style="margin-bottom:clamp(.45rem,1.2vh,.9rem);">Competition Wraps. <span class="accent">Bridge to Phase 3.</span></h2>
+    <div class="tasks">
+      <div class="task rev">
+        <span class="tnum">2.8</span>
+        <span class="ttxt"><strong>Winners Announced Publicly</strong><br><em>Prize distribution per agreed pool · Winners become Phase 3 ambassadors · Public announcement across all channels</em></span>
+        <span class="town">FELPS</span>
+      </div>
+      <div class="task rev">
+        <span class="tnum">2.9</span>
+        <span class="ttxt"><strong>Strategy Showcases</strong><br><em>Top performers publish comparisons: their workflow on Polymarket/Kalshi vs Hedgehog · Areas: fee trading, execution speed, portfolio tracking, position analytics</em></span>
+        <span class="town">FELPS + KOLs</span>
+      </div>
+      <div class="task rev">
+        <span class="tnum">2.10</span>
+        <span class="ttxt"><strong>X Ads Campaign 3 — Social Proof</strong><br><em>Promote KOL testimonials, leaderboard highlights, competition results · "50 top traders already inside. Public testnet opens next week."</em></span>
+        <span class="town">JOONAS</span>
+      </div>
+    </div>
+    <div class="rev card" style="margin-top:var(--gap);">
+      <p style="font-size:var(--bs);color:var(--text2);">"If this is what 50 people did, imagine what happens when the gates fully open."<br>
+      <span style="color:var(--dim);">⚑ After first round of 50 participants, request <strong style="color:var(--teal);">25–30 additional invites</strong> for the Hedgehog community before Phase 3 opens.</span></p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+  11 — PHASE 3 HEADER (dark deep)
+============================================================ -->
+<section class="slide dark-deep" id="s13">
+  <img class="watermark" src="assets/watermark.png" alt="">
+  <div class="big-num">3</div>
+  <div class="topbar">
+    <div class="logo-mark"><img class="logo-img" src="assets/logo.png" alt="Hedgehog"></div>
+    <div style="display:flex;align-items:center;gap:.8rem;"><span class="badge">Phase 3 · Weeks 7–9</span><span class="snum">13 / 22</span></div>
+  </div>
+  <div class="body">
+    <p class="rev dim-txt" style="font-size:var(--ss);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.35em;">Public Testnet</p>
+    <h2 class="rev" style="color:var(--lime);margin-bottom:var(--gap);font-size:clamp(1.3rem,3.5vw,2.5rem);">Prediction Type Cards. Viral Loop. Open Access.</h2>
+
+    <div class="rev tasks" style="max-width:700px;">
+      <div class="wrow">
+        <div><div class="wlabel">Week 7</div><div class="wtag">"Who Are You?"</div></div>
+        <div>
+          <div class="wname">Prediction Type cards drop. Identity mechanic launches.</div>
+          <div class="wdesc">Card system live · KOLs seed their types first (24–48h staggered) · X Ads Campaign 4 · Clippers of card reveals</div>
+        </div>
+      </div>
+      <div class="wrow">
+        <div><div class="wlabel">Week 8</div><div class="wtag">"The Wave"</div></div>
+        <div>
+          <div class="wname">Public testnet trading opens. Cards everywhere on Twitter.</div>
+          <div class="wdesc">All waitlisted users + card holders get immediate access · Leaderboard campaigns live · KOLs compete publicly · ScribbleDAO content partnerships</div>
+        </div>
+      </div>
+      <div class="wrow">
+        <div><div class="wlabel">Week 9</div><div class="wtag">"The Foundation"</div></div>
+        <div>
+          <div class="wname">Testnet wraps. Loyalty program preview. Mainnet teaser.</div>
+          <div class="wdesc">New features drop (News Feed, P/L Cards, Strategy Marketplace) · Loyalty tiers announced · Mainnet teaser video by NAI</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="narrative rev">"Hedgehog is open. Enter your X handle — discover your Prediction Type. Are you a Contrarian? A Momentum Rider? A Whale Watcher? Share yours."</div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+  12 — PHASE 3 · PREDICTION TYPE CARDS
+============================================================ -->
+<section class="slide light" id="s14">
+  <img class="watermark" src="assets/watermark.png" alt="">
+  <div class="topbar">
+    <div class="logo-mark"><img class="logo-img" src="assets/logo.png" alt="Hedgehog"></div>
+    <div style="display:flex;align-items:center;gap:.8rem;"><span class="badge">Phase 3 · Week 7 — Prediction Type Cards</span><span class="snum">14 / 22</span></div>
+  </div>
+  <div class="body">
+    <h2 class="rev" style="margin-bottom:clamp(.4rem,1.1vh,.85rem);">3.1 — Card System <span class="accent">Launch</span></h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(.7rem,1.8vw,1.4rem);">
+      <div class="rev">
+        <div class="slabel">How It Works — Step by Step</div>
+        <div class="tasks" style="gap:calc(var(--gap)*.7);">
+          <div class="task dev">
+            <span class="tnum">1</span>
+            <span class="ttxt"><strong>User visits landing page and enters X handle</strong><br><em>Twitter OAuth login</em></span>
+            <span class="town dev-own">DEV</span>
+          </div>
+          <div class="task dev">
+            <span class="tnum">2</span>
+            <span class="ttxt"><strong>Algorithm assigns one of 20 Prediction Types</strong><br><em>Analyzes profile signals — random assignment OK for testnet</em></span>
+            <span class="town dev-own">DEV</span>
+          </div>
+          <div class="task">
+            <span class="tnum">3</span>
+            <span class="ttxt"><strong>System generates a beautifully designed card</strong><br><em>Unique color scheme, icon, tagline per type</em></span>
+            <span class="town">FONSECA</span>
+          </div>
+          <div class="task dev">
+            <span class="tnum">4</span>
+            <span class="ttxt"><strong>One-click share to Twitter</strong><br><em>Pre-filled text + card image · PNG optimized for Twitter</em></span>
+            <span class="town dev-own">DEV</span>
+          </div>
+        </div>
+        <p style="font-size:var(--ss);color:var(--dim);margin-top:.5em;"><strong style="color:var(--teal);">3.2 KOL Seeding:</strong> Phase 2 KOLs share first · staggered 24–48h · <strong style="color:var(--teal);">3.4 Clippers:</strong> card reveal clips — FELPS<br><strong style="color:var(--teal);">3.3 X Ads Campaign 4:</strong> "What's your Prediction Type?" — JOONAS</p>
+      </div>
+      <div class="rev">
+        <div class="slabel">20 Prediction Types — 5 examples · Fonseca designs all</div>
+        <div class="tasks" style="gap:calc(var(--gap)*.65);">
+          <div class="task"><span class="tnum">01</span><span class="ttxt"><strong>The Contrarian</strong><br><em>Always bets against the crowd — and wins</em></span></div>
+          <div class="task"><span class="tnum">02</span><span class="ttxt"><strong>The Momentum Rider</strong><br><em>Spots trends before they peak</em></span></div>
+          <div class="task"><span class="tnum">03</span><span class="ttxt"><strong>The Whale Watcher</strong><br><em>Follows the smart money, never the noise</em></span></div>
+          <div class="task"><span class="tnum">04</span><span class="ttxt"><strong>The Data Oracle</strong><br><em>Decisions driven by on-chain signals</em></span></div>
+          <div class="task"><span class="tnum">05</span><span class="ttxt"><strong>The Degen Sage</strong><br><em>High risk, high reward — but always calculated</em></span></div>
+        </div>
+        <div class="card" style="margin-top:calc(var(--gap)*.7);">
+          <p style="font-size:var(--ss);color:var(--dim);">Card design: each type gets unique color scheme, icon, tagline. Think personality quiz meets trading identity. Must be instantly recognizable as Hedgehog brand. Reference style: Monad Cards (Provabz to source examples for Fonseca).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+  13 — PHASE 3 · WEEK 8 "THE WAVE"
+============================================================ -->
+<section class="slide light" id="s15">
+  <img class="watermark" src="assets/watermark.png" alt="">
+  <div class="topbar">
+    <div class="logo-mark"><img class="logo-img" src="assets/logo.png" alt="Hedgehog"></div>
+    <div style="display:flex;align-items:center;gap:.8rem;"><span class="badge">Phase 3 · Week 8 — "The Wave"</span><span class="snum">15 / 22</span></div>
+  </div>
+  <div class="body">
+    <h2 class="rev" style="margin-bottom:clamp(.45rem,1.2vh,.9rem);">Public Testnet <span class="accent">Opens</span></h2>
+    <div class="tasks">
+      <div class="task rev">
+        <span class="tnum">3.5</span>
+        <span class="ttxt"><strong>Public Testnet Trading Opens</strong><br><em>All waitlisted users + card holders get immediate access. No phased rollout. Simultaneous announcement across all channels.</em></span>
+        <span class="town">ALL TEAM</span>
+      </div>
+      <div class="task rev">
+        <span class="tnum">3.6</span>
+        <span class="ttxt"><strong>Leaderboard Campaigns</strong><br><em>Top ROI (highest % return) → USD or HH Points · Most Active (number of predictions made) → HH Points · Best Streak (consecutive correct predictions) → HH Points · All incentives: USD or doubled as Hedgehog Points → future loyalty program</em></span>
+        <span class="town">FELPS + ESKO</span>
+      </div>
+      <div class="task rev">
+        <span class="tnum">3.7</span>
+        <span class="ttxt"><strong>KOL Public Competition</strong><br><em>Phase 2 KOLs continue as public competitors. Share P/L screenshots, strategy threads, leaderboard positions. Creates aspirational content for new users.</em></span>
+        <span class="town">JOONAS + KOLs</span>
+      </div>
+      <div class="task rev">
+        <span class="tnum">3.8</span>
+        <span class="ttxt"><strong>Content Creation Partnerships</strong><br><em>Partners: ScribbleDAO and similar creator DAOs · Content: strategy tutorials, platform walkthroughs, meme content, Prediction Type reaction videos</em></span>
+        <span class="town">FELPS + JOONAS</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+  14 — PHASE 3 · WEEK 9 "THE FOUNDATION"
+============================================================ -->
+<section class="slide light" id="s16">
+  <img class="watermark" src="assets/watermark.png" alt="">
+  <div class="topbar">
+    <div class="logo-mark"><img class="logo-img" src="assets/logo.png" alt="Hedgehog"></div>
+    <div style="display:flex;align-items:center;gap:.8rem;"><span class="badge">Phase 3 · Week 9 — "The Foundation"</span><span class="snum">16 / 22</span></div>
+  </div>
+  <div class="body">
+    <h2 class="rev" style="margin-bottom:clamp(.45rem,1.2vh,.9rem);">Close the Loop. <span class="accent">Tease Mainnet.</span></h2>
+    <div class="tasks">
+      <div class="task dev rev">
+        <span class="tnum" style="color:#2A7DAE;">3.9</span>
+        <span class="ttxt"><strong>New Social Features Drop</strong><br><em>24/7 News Feed on Twitter (like Polymarket &amp; Kalshi) · Shareable P/L Cards — auto-generated weekly + per trade · Strategy Marketplace — browse and copy strategies</em></span>
+        <span class="town dev-own">BRUNO / SERAFIM / ALEX</span>
+      </div>
+      <div class="task rev">
+        <span class="tnum">3.10</span>
+        <span class="ttxt"><strong>Loyalty Program Preview</strong><br><em>Announce volume-based tier system: Bronze / Silver / Gold — thresholds TBD with Esko. Testnet activity converts to loyalty points. Early users get a head start.</em></span>
+        <span class="town">ESKO + MARKETING</span>
+      </div>
+      <div class="task rev">
+        <span class="tnum">3.11</span>
+        <span class="ttxt"><strong>Mainnet Teaser</strong><br><em>Short teaser clip + announcement post. "Testnet was the warm-up. Mainnet is next." Builds bridge to next chapter.</em></span>
+        <span class="town">NAI + MARKETING</span>
+      </div>
+    </div>
+    <div class="rev card" style="margin-top:var(--gap);">
+      <p style="font-size:var(--bs);color:var(--text2);">By end of Week 9: community built, product proven, loyalty program creates long-term stickiness. Team moves to mainnet launch planning.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+  15 — DEV TASKS (All Phases)
+============================================================ -->
+<section class="slide light" id="s17">
+  <img class="watermark" src="assets/watermark.png" alt="">
+  <div class="topbar">
+    <div class="logo-mark"><img class="logo-img" src="assets/logo.png" alt="Hedgehog"></div>
+    <div style="display:flex;align-items:center;gap:.8rem;"><span class="badge" style="color:#2A7DAE;border-color:rgba(42,125,174,.4);background:rgba(42,125,174,.07);">Dev Team — Bruno · Serafim · Alex</span><span class="snum">17 / 22</span></div>
+  </div>
+  <div class="body">
+    <h2 class="rev" style="margin-bottom:clamp(.45rem,1.2vh,.9rem);">Dev <span style="color:#2A7DAE;">Tasks</span> — Full Plan</h2>
+    <div class="tasks">
+      <div class="task dev rev">
+        <span class="tnum" style="color:#2A7DAE;">P2</span>
+        <span class="ttxt"><strong>Leaderboard — Update to Top 50 Users</strong><br><em>Currently shows only top 3. Must display top 50 before Week 4 starts. This is a hard dependency — Phase 2 cannot launch without it.</em></span>
+        <span class="town dev-own" style="color:#C0392B!important;">DEADLINE: WEEK 4</span>
+      </div>
+      <div class="task dev rev">
+        <span class="tnum" style="color:#2A7DAE;">P3</span>
+        <span class="ttxt"><strong>Prediction Type Card — Landing Page + X OAuth</strong><br><em>User inputs X handle via OAuth · System reads handle · Assigns one of 20 Prediction Types · Generates unique card (PNG) · User downloads or shares directly to Twitter with pre-filled text</em></span>
+        <span class="town dev-own">WEEK 7</span>
+      </div>
+      <div class="task dev rev">
+        <span class="tnum" style="color:#2A7DAE;">P3</span>
+        <span class="ttxt"><strong>Card Generation Algorithm</strong><br><em>Analyzes X profile signals and assigns type. Random assignment acceptable for testnet. Output: PNG with handle, type name, tagline, Hedgehog branding. Optimized for Twitter sharing format.</em></span>
+        <span class="town dev-own">WEEK 7</span>
+      </div>
+      <div class="task dev rev">
+        <span class="tnum" style="color:#2A7DAE;">P3</span>
+        <span class="ttxt"><strong>Social Features — Week 9 Drop</strong><br><em>24/7 News Feed on Twitter · Auto-generated P/L share cards (weekly + individual trades) · Strategy Marketplace (browse + copy)</em></span>
+        <span class="town dev-own">WEEK 9</span>
+      </div>
+    </div>
+    <div class="rev card" style="margin-top:var(--gap);">
+      <p style="font-size:var(--bs);color:var(--dim);"><strong style="color:var(--teal);">Open questions for Esko + Dev:</strong> Twitter OAuth feasibility + timeline · Starting balance: $100 or $1,000? · Can players top up during competition? · Loyalty tier thresholds (Bronze/Silver/Gold)</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+  16 — MARKETING SUMMARY
+============================================================ -->
+<section class="slide light" id="s18">
+  <img class="watermark" src="assets/watermark.png" alt="">
+  <div class="topbar">
+    <div class="logo-mark"><img class="logo-img" src="assets/logo.png" alt="Hedgehog"></div>
+    <div style="display:flex;align-items:center;gap:.8rem;"><span class="badge">Marketing — Start Here</span><span class="snum">18 / 22</span></div>
+  </div>
+  <div class="body">
+    <h2 class="rev" style="margin-bottom:clamp(.45rem,1.2vh,.9rem);">Marketing <span class="accent">Priority Order</span></h2>
+    <div class="tasks">
+      <div class="task rev"><span class="tnum">1</span><span class="ttxt"><strong>Brief NAI on hype video script</strong> — cinematic, wcm_inc + Kalshi reference style. Arc in task 1.1.</span><span class="town">NOW</span></div>
+      <div class="task rev"><span class="tnum">2</span><span class="ttxt"><strong>Write Market Size &amp; Opportunity article</strong> (1.2) — use verified data. CTA to waitlist.</span><span class="town">FELPS</span></div>
+      <div class="task rev"><span class="tnum">3</span><span class="ttxt"><strong>Set up X Ads Campaign 1 — Awareness</strong> · $500 budget · two creatives · prediction market targeting</span><span class="town">JOONAS</span></div>
+      <div class="task rev"><span class="tnum">4</span><span class="ttxt"><strong>Build KOL tracking spreadsheet</strong> — identify 50 hand-picked participants for Phase 2. Personal outreach only.</span><span class="town">JOONAS + TEAM</span></div>
+      <div class="task rev"><span class="tnum">5</span><span class="ttxt"><strong>Write Comparison article</strong> (1.5) — Hedgehog vs Polymarket, Kalshi, Opinion, Limitless</span><span class="town">FELPS</span></div>
+      <div class="task rev"><span class="tnum">6</span><span class="ttxt"><strong>Find Monad-style card design references for Fonseca</strong> — KOL cards. Change colors/design to match Hedgehog brand.</span><span class="town">PROVABZ</span></div>
+      <div class="task rev"><span class="tnum">7</span><span class="ttxt"><strong>Draft feedback form Q1–Q6 with NPS</strong> — Google Forms. Mandatory before Phase 2 rewards distributed.</span><span class="town">FELPS</span></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+  17 — COMPARISON INTRO (dark teal)
+============================================================ -->
+<section class="slide dark-teal" id="s19">
+  <img class="watermark" src="assets/watermark.png" alt="">
+  <div class="topbar">
+    <div class="logo-mark"><img class="logo-img" src="assets/logo.png" alt="Hedgehog"></div>
+    <div style="display:flex;align-items:center;gap:.8rem;"><span class="badge">Sources</span><span class="snum">19 / 22</span></div>
+  </div>
+  <div class="body" style="justify-content:center;text-align:center;">
+    <p class="rev dim-txt" style="font-size:var(--ss);letter-spacing:.2em;text-transform:uppercase;margin-bottom:.5rem;">Document Sources</p>
+    <h2 class="rev" style="color:var(--lime);font-size:clamp(1.5rem,4vw,3rem);margin-bottom:clamp(.75rem,2vh,1.5rem);">Where Did This Plan Come From?</h2>
+    <p class="rev" style="font-size:var(--bs);color:rgba(237,235,228,.7);max-width:600px;margin:0 auto;line-height:1.8;">This plan was built by merging two documents:<br>
+    <strong style="color:var(--lime);">Joonas's plan</strong> — the primary base structure · all 3 phases · all week narratives · all task numbers<br>
+    <strong style="color:var(--mint);">Felps's plan</strong> — complementary details that add clarity and specifics<br><br>
+    The next 2 slides show exactly what came from each.</p>
+  </div>
+</section>
+
+
+<!-- ============================================================
+  18 — FROM JOONAS
+============================================================ -->
+<section class="slide light" id="s20">
+  <img class="watermark" src="assets/watermark.png" alt="">
+  <div class="topbar">
+    <div class="logo-mark"><img class="logo-img" src="assets/logo.png" alt="Hedgehog"></div>
+    <div style="display:flex;align-items:center;gap:.8rem;"><span class="badge">Sources — Joonas's Plan</span><span class="snum">20 / 22</span></div>
+  </div>
+  <div class="body">
+    <h2 class="rev" style="margin-bottom:clamp(.45rem,1.2vh,.9rem);">Everything from <span class="accent">Joonas</span></h2>
+    <div class="cmp-grid rev">
+      <div class="cmp-col">
+        <h3 class="joonas">Structure + Strategy</h3>
+        <ul class="cmp-list check">
+          <li>3-phase structure (Weeks 1–9) — the entire backbone</li>
+          <li>All week narrative names ("The Signal", "The Edge", "The Countdown", "The Inner Circle", "The Arena", "The Proof", "Who Are You?", "The Wave", "The Foundation")</li>
+          <li>All 20+ numbered deliverables — 1.1 through 3.11</li>
+          <li>$1K + HOG Points prize pool (confirmed)</li>
+          <li>Partnership announcement in Week 3 (1.9)</li>
+          <li>After 50 users, request 25–30 more invites for Hedgehog community</li>
+          <li>All 4 X Ads campaigns with targeting + creative direction</li>
+          <li>$500 budget for Campaign 1</li>
+        </ul>
+      </div>
+      <div class="cmp-col">
+        <h3 class="joonas">Community + Product</h3>
+        <ul class="cmp-list check">
+          <li>5 specific target communities (Prediction Arc, Polymarket Trade, ZSC DAO, Kalshi Eco Affiliates, X-Ray Army)</li>
+          <li>4 KOL selection criteria (trading experience, Twitter presence, network access, content ability)</li>
+          <li>20 Prediction Type cards as Phase 3 viral mechanic (the entire concept)</li>
+          <li>Prediction Type examples (Contrarian, Momentum Rider, Whale Watcher, Data Oracle, Degen Sage)</li>
+          <li>Strategy Showcases in Week 6 (2.9)</li>
+          <li>Leaderboard categories (Top ROI, Most Active, Best Streak)</li>
+          <li>Content partnerships — ScribbleDAO (3.8)</li>
+          <li>Social features in Week 9 (News Feed, P/L Cards, Strategy Marketplace)</li>
+          <li>Loyalty program Bronze/Silver/Gold — 3.10</li>
+          <li>Mainnet Teaser — 3.11</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+  19 — FROM FELPS + WHAT WAS LEFT OUT
+============================================================ -->
+<section class="slide light" id="s21">
+  <img class="watermark" src="assets/watermark.png" alt="">
+  <div class="topbar">
+    <div class="logo-mark"><img class="logo-img" src="assets/logo.png" alt="Hedgehog"></div>
+    <div style="display:flex;align-items:center;gap:.8rem;"><span class="badge">Sources — Felps's Plan</span><span class="snum">21 / 22</span></div>
+  </div>
+  <div class="body">
+    <h2 class="rev" style="margin-bottom:clamp(.45rem,1.2vh,.9rem);">What <span style="color:#9B7FE8;">Felps Added</span> — and What We Left Out</h2>
+    <div class="cmp-grid rev">
+      <div class="cmp-col">
+        <h3 class="felps">Kept from Felps ✓</h3>
+        <ul class="cmp-list purple">
+          <li>Feedback form with specific Q1–Q6 questions including NPS score (Q6)</li>
+          <li>Named the full dev team: Bruno, Serafim, Alex — clearly labeled</li>
+          <li>Esko identified as lead / final decision maker</li>
+          <li>Closed community (Telegram or Discord) flagged for team discussion</li>
+          <li>KOL selection with priority levels (Very High → High → Medium)</li>
+          <li>Monad-style card design reference for Fonseca — Provabz to source</li>
+          <li>Top-up rule during competition as an open question for Esko</li>
+          <li>Starting balance ($100 or $1,000) as an open question for Esko</li>
+        </ul>
+      </div>
+      <div class="cmp-col">
+        <h3 class="left">Not Included from Felps ✗</h3>
+        <ul class="cmp-list cross">
+          <li>KOL Tier Cards (Oracle / Prophet / Seer based on follower count) — replaced by Joonas's Prediction Type cards as Phase 3 mechanic</li>
+          <li>Referral link system (Oracle=5 links, Prophet=2, Seer=0) — not in this plan</li>
+          <li>Larger prize pools ($5K closed beta + $8K trading arena) — kept Joonas's $1K</li>
+          <li>4-phase structure (Pre-Launch Hype / Closed Beta / Private Launch / Public Launch) — kept Joonas's 3 phases</li>
+          <li>Days-based timeline (Days 1–14, 15–28) — kept Joonas's week-based timeline</li>
+          <li>"Hedgehog Arena: Season 1" branding — may be revisited later</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+  20 — CLOSING (dark deep)
+============================================================ -->
+<section class="slide dark-deep" id="s22">
+  <img class="watermark" src="assets/watermark.png" alt="">
+  <div class="topbar">
+    <div class="logo-mark"><img class="logo-img" src="assets/logo.png" alt="Hedgehog"></div>
+    <span class="snum">22 / 22</span>
+  </div>
+  <div class="body" style="justify-content:center;align-items:center;text-align:center;">
+    <p class="rev dim-txt" style="font-size:var(--ss);letter-spacing:.2em;text-transform:uppercase;margin-bottom:clamp(.5rem,1.5vh,1.2rem);">9 Weeks · 3 Phases · Clear Owners</p>
+    <p class="close-quote rev">"Testnet was the warm-up.<br><span class="hl">Mainnet is next."</span></p>
+    <p class="rev" style="font-size:var(--bs);color:rgba(237,235,228,.5);margin-top:clamp(.75rem,2vh,1.5rem);">thehedgehog.io · @TheHedgehog_io</p>
+    <div class="pills rev" style="justify-content:center;margin-top:clamp(.75rem,2vh,1.5rem);">
+      <span class="pill">Felps</span><span class="pill">Joonas</span><span class="pill">Provabz</span>
+      <span class="pill">Fonseca</span><span class="pill">Nai</span>
+      <span class="pill" style="color:#4BB8E0;border-color:rgba(75,184,224,.4);">Bruno</span>
+      <span class="pill" style="color:#4BB8E0;border-color:rgba(75,184,224,.4);">Serafim</span>
+      <span class="pill" style="color:#4BB8E0;border-color:rgba(75,184,224,.4);">Alex</span>
+      <span class="pill" style="color:var(--lime);border-color:rgba(205,250,182,.4);">Esko</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+  JAVASCRIPT — CONTROLLER
+============================================================ -->
+<script>
+class Deck {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.total  = this.slides.length;
+    this.cur    = 0;
+    this.locked = false;
+    this.buildDots();
+    this.observe();
+    this.keys();
+    this.wheel();
+    this.touch();
+    this.updateUI();
+  }
+
+  buildDots() {
+    const nav = document.getElementById('navDots');
+    this.slides.forEach((_, i) => {
+      const d = document.createElement('button');
+      d.className = 'nav-dot' + (i === 0 ? ' active' : '');
+      d.setAttribute('aria-label', 'Slide ' + (i + 1));
+      d.addEventListener('click', () => this.go(i));
+      nav.appendChild(d);
+    });
+    this.dots = nav.querySelectorAll('.nav-dot');
+  }
+
+  observe() {
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('vis');
+          this.slides.forEach((s, i) => { if (s === e.target) { this.cur = i; this.updateUI(); } });
+        }
+      });
+    }, { threshold: 0.5 });
+    this.slides.forEach(s => io.observe(s));
+  }
+
+  go(i) {
+    i = Math.max(0, Math.min(i, this.total - 1));
+    this.cur = i;
+    this.slides[i].scrollIntoView({ behavior: 'smooth' });
+    this.updateUI();
+  }
+
+  keys() {
+    document.addEventListener('keydown', e => {
+      // Spacebar is never used for navigation — left free for typing
+      if (['ArrowDown','ArrowRight','PageDown'].includes(e.key)) { e.preventDefault(); this.go(this.cur + 1); }
+      if (['ArrowUp','ArrowLeft','PageUp'].includes(e.key))      { e.preventDefault(); this.go(this.cur - 1); }
+      if (e.key === 'Home') { e.preventDefault(); this.go(0); }
+      if (e.key === 'End')  { e.preventDefault(); this.go(this.total - 1); }
+    });
+  }
+
+  wheel() {
+    document.addEventListener('wheel', e => {
+      if (this.locked) return;
+      this.locked = true;
+      e.deltaY > 0 ? this.go(this.cur + 1) : this.go(this.cur - 1);
+      setTimeout(() => { this.locked = false; }, 900);
+    }, { passive: true });
+  }
+
+  touch() {
+    let y0 = 0;
+    document.addEventListener('touchstart', e => { y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend',   e => {
+      const dy = y0 - e.changedTouches[0].clientY;
+      if (Math.abs(dy) > 45) dy > 0 ? this.go(this.cur + 1) : this.go(this.cur - 1);
+    }, { passive: true });
+  }
+
+  updateUI() {
+    const bar = document.getElementById('progressBar');
+    if (bar) bar.style.width = (this.cur / (this.total - 1) * 100) + '%';
+    if (this.dots) this.dots.forEach((d, i) => d.classList.toggle('active', i === this.cur));
+  }
+}
+
+/* =============================================
+   COMMENT SYSTEM — Google Sheets backend
+   Sheet: https://docs.google.com/spreadsheets/d/12onQYxnymB0yK4GdiU8sFna_oSRpCkh1d17RAP00Nh0
+   ============================================= */
+class Comments {
+  constructor(deck) {
+    this.deck  = deck;
+    this.UKEY  = 'hh_webapp_url';
+    this.NKEY  = 'hh_reviewer_name';
+    this.url   = localStorage.getItem(this.UKEY) || '';
+    this.data  = {};      // { slideIdx: [{name,text,time,id},...] }
+    this.syncing = false;
+
+    this.panel  = document.getElementById('cmPanel');
+    this.bubble = document.getElementById('cmBubble');
+    this.list   = document.getElementById('cmList');
+    this.lbl    = document.getElementById('cmSlideLbl');
+    this.status = document.getElementById('cmStatus');
+    this.nameEl = document.getElementById('cmName');
+    this.textEl = document.getElementById('cmText');
+
+    this.nameEl.value = localStorage.getItem(this.NKEY) || '';
+    this.bind();
+
+    if (this.url) {
+      this.syncFromSheet();
+      setInterval(() => this.syncFromSheet(), 30000);
+    } else {
+      this.showSetup();
+    }
+  }
+
+  // ---- Network ----
+
+  uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+
+  qs(params) {
+    return Object.entries(params)
+      .map(([k,v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');
+  }
+
+  // JSONP — bypasses CORS entirely for reads
+  jsonp(params) {
+    return new Promise((resolve, reject) => {
+      const cb = '_hhcb' + Date.now();
+      const s  = document.createElement('script');
+      s.src = `${this.url}?${this.qs(params)}&callback=${cb}`;
+      const cleanup = () => { try { delete window[cb]; s.remove(); } catch {} };
+      window[cb] = data => { cleanup(); resolve(data); };
+      s.onerror  = () => { cleanup(); reject(new Error('script load failed')); };
+      setTimeout(() => { cleanup(); reject(new Error('timeout')); }, 12000);
+      document.head.appendChild(s);
+    });
+  }
+
+  // JSONP write — same mechanism as reads, confirmed to work through Apps Script redirects
+  fireWrite(params) {
+    this.jsonp(params).catch(() => {});
+  }
+
+  async syncFromSheet() {
+    if (!this.url || this.syncing) return;
+    this.syncing = true;
+    this.setStatus('syncing');
+    try {
+      const rows = await this.jsonp({ action:'get' });
+      if (Array.isArray(rows)) {
+        const grouped = {};
+        rows.forEach(c => {
+          if (!grouped[c.slideIdx]) grouped[c.slideIdx] = [];
+          grouped[c.slideIdx].push(c);
+        });
+        this.data = grouped;
+        this.setStatus('ok');
+        this.refresh();
+      }
+    } catch { this.setStatus('error'); }
+    this.syncing = false;
+  }
+
+  async add(idx, name, text) {
+    name = name.trim(); text = text.trim();
+    if (!name) { this.nameEl.style.borderColor = '#c0392b'; setTimeout(() => this.nameEl.style.borderColor='', 1400); return; }
+    if (!text) { this.textEl.style.borderColor = '#c0392b'; setTimeout(() => this.textEl.style.borderColor='', 1400); return; }
+    localStorage.setItem(this.NKEY, name);
+
+    const c = {
+      slideIdx: idx, name, text,
+      time: (() => { const d=new Date(); const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; return String(d.getUTCDate()).padStart(2,'0')+' '+mo[d.getUTCMonth()]+' '+String(d.getUTCHours()).padStart(2,'0')+':'+String(d.getUTCMinutes()).padStart(2,'0')+' UTC'; })(),
+      id: this.uid()
+    };
+
+    // Optimistic update — show immediately, write in background
+    if (!this.data[idx]) this.data[idx] = [];
+    this.data[idx].push(c);
+    this.textEl.value = '';
+    this.renderList(idx);
+    this.refresh();
+
+    this.fireWrite({ action:'add', slide:idx, name:c.name, text:c.text, time:c.time, id:c.id });
+  }
+
+  del(idx, id) {
+    if (!this.data[idx]) return;
+    this.data[idx] = this.data[idx].filter(c => c.id !== id);
+    if (!this.data[idx].length) delete this.data[idx];
+    this.renderList(idx);
+    this.refresh();
+    this.fireWrite({ action:'delete', id });
+  }
+
+  // ---- UI ----
+
+  esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  setStatus(state) {
+    const map = { ok:'● Live', syncing:'↻ Syncing…', error:'⚠ Offline — check URL' };
+    const col = { ok:'#64D9A2', syncing:'#D4A800', error:'#c0392b' };
+    this.status.textContent = map[state] || '';
+    this.status.style.color = col[state] || '';
+  }
+
+  renderList(idx) {
+    this.lbl.textContent = `Slide ${idx + 1} / ${this.deck.total}`;
+    const cs = this.data[idx] || [];
+    if (!cs.length) { this.list.innerHTML = '<div class="cm-empty">No notes for this slide yet.</div>'; return; }
+    this.list.innerHTML = cs.map(c => `
+      <div class="cm-item">
+        <div class="cm-item-top">
+          <span class="cm-item-name">${this.esc(c.name)}</span>
+          <span class="cm-item-time">${this.esc(c.time)}</span>
+        </div>
+        <div class="cm-item-text">${this.esc(c.text)}</div>
+        <button class="cm-del" data-id="${this.esc(c.id)}" title="Delete note">✕</button>
+      </div>`).join('');
+    this.list.querySelectorAll('.cm-del').forEach(b =>
+      b.addEventListener('click', () => this.del(idx, b.dataset.id)));
+  }
+
+  refresh() {
+    const total = Object.values(this.data).reduce((s, a) => s + a.length, 0);
+    this.bubble.textContent = total;
+    this.bubble.style.display = total ? 'block' : 'none';
+    document.querySelectorAll('.cm-slide-badge').forEach(b => b.remove());
+    this.deck.slides.forEach((slide, idx) => {
+      const n = (this.data[idx] || []).length;
+      if (n) {
+        const b = document.createElement('div');
+        b.className = 'cm-slide-badge';
+        b.textContent = `${n} note${n > 1 ? 's' : ''}`;
+        slide.appendChild(b);
+      }
+    });
+    if (this.panel.classList.contains('open')) this.renderList(this.deck.cur);
+  }
+
+  open()  { this.panel.classList.add('open');    this.renderList(this.deck.cur); }
+  close() { this.panel.classList.remove('open'); }
+
+  exportText() {
+    const lines = ['HEDGEHOG LAUNCH PLAN — SLIDE NOTES', '='.repeat(44), ''];
+    let any = false;
+    this.deck.slides.forEach((_, idx) => {
+      const cs = this.data[idx] || [];
+      if (!cs.length) return;
+      any = true;
+      lines.push(`SLIDE ${idx + 1}`);
+      lines.push('-'.repeat(20));
+      cs.forEach((c, i) => {
+        lines.push(`[${c.time}] ${c.name}:`);
+        lines.push(c.text);
+        if (i < cs.length - 1) lines.push('');
+      });
+      lines.push('');
+    });
+    if (!any) { alert('No notes yet.'); return; }
+    navigator.clipboard.writeText(lines.join('\n'))
+      .then(() => alert('Notes copied to clipboard!'))
+      .catch(() => alert('Could not copy — try again.'));
+  }
+
+  showSetup() {
+    const area = document.getElementById('cmImportArea');
+    area.value = this.url;
+    area.placeholder = 'Paste your Apps Script Web App URL here\n(starts with https://script.google.com/macros/s/...)';
+    document.getElementById('cmModalTitle').textContent = 'Connect to Google Sheets';
+    document.getElementById('cmModalConfirm').textContent = 'Connect';
+    document.getElementById('cmModalBg').classList.add('open');
+  }
+
+  setURL(raw) {
+    const url = raw.trim();
+    if (!url.startsWith('https://script.google.com')) {
+      alert('Please paste the Apps Script Web App URL — it starts with https://script.google.com/macros/s/...');
+      return;
+    }
+    this.url = url;
+    localStorage.setItem(this.UKEY, url);
+    document.getElementById('cmModalBg').classList.remove('open');
+    this.syncFromSheet();
+    setInterval(() => this.syncFromSheet(), 30000);
+  }
+
+  bind() {
+    document.getElementById('cmBtn').addEventListener('click', () =>
+      this.panel.classList.contains('open') ? this.close() : this.open());
+    document.getElementById('cmClose').addEventListener('click', () => this.close());
+    document.getElementById('cmSubmit').addEventListener('click', () =>
+      this.add(this.deck.cur, this.nameEl.value, this.textEl.value));
+    this.textEl.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey))
+        this.add(this.deck.cur, this.nameEl.value, this.textEl.value);
+    });
+    document.getElementById('cmExportText').addEventListener('click', () => this.exportText());
+    document.getElementById('cmSyncBtn').addEventListener('click', () => this.syncFromSheet());
+    document.getElementById('cmSettingsBtn').addEventListener('click', () => this.showSetup());
+
+    const bg = document.getElementById('cmModalBg');
+    document.getElementById('cmModalCancel').addEventListener('click', () => bg.classList.remove('open'));
+    document.getElementById('cmModalConfirm').addEventListener('click', () =>
+      this.setURL(document.getElementById('cmImportArea').value));
+    bg.addEventListener('click', e => { if (e.target === bg) bg.classList.remove('open'); });
+
+    document.addEventListener('keydown', e => {
+      if ((e.key === 'c' || e.key === 'C') && !e.target.closest('.cm-panel') && !e.target.closest('.cm-modal')) {
+        e.preventDefault();
+        this.panel.classList.contains('open') ? this.close() : this.open();
+      }
+    });
+
+    setInterval(() => {
+      if (!this.panel.classList.contains('open')) return;
+      const cur = this.deck.cur;
+      const shown = parseInt(this.lbl.textContent.split(' ')[1]) - 1;
+      if (shown !== cur) this.renderList(cur);
+    }, 250);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const deck = new Deck();
+  new Comments(deck);
+});
+</script>
+</body>
+</html>

@@ -1717,7 +1717,8 @@ class Comments {
     this.deck  = deck;
     this.UKEY  = 'hh_webapp_url';
     this.NKEY  = 'hh_reviewer_name';
-    this.url   = localStorage.getItem(this.UKEY) || '';
+    // Hardcoded — overridden by localStorage if reconfigured via ⚙
+    this.url   = localStorage.getItem(this.UKEY) || 'https://script.google.com/macros/s/AKfycbyZu3SuAFRmsCw7v7GMF6XdegdzkhoouIqtLaAbNrCaVOgrsc3YGl6BrZgcj-pC0Lu3/exec';
     this.data  = {};      // { slideIdx: [{name,text,time,id},...] }
     this.syncing = false;
 
@@ -1732,12 +1733,8 @@ class Comments {
     this.nameEl.value = localStorage.getItem(this.NKEY) || '';
     this.bind();
 
-    if (this.url) {
-      this.syncFromSheet();
-      setInterval(() => this.syncFromSheet(), 30000);
-    } else {
-      this.showSetup();
-    }
+    this.syncFromSheet();
+    setInterval(() => this.syncFromSheet(), 30000);
   }
 
   // ---- Network ----
@@ -1908,7 +1905,6 @@ class Comments {
     localStorage.setItem(this.UKEY, url);
     document.getElementById('cmModalBg').classList.remove('open');
     this.syncFromSheet();
-    setInterval(() => this.syncFromSheet(), 30000);
   }
 
   bind() {
